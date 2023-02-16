@@ -1,25 +1,12 @@
-const requset = require("request");
-const cheerio = require("cheerio");
+const express = require("express");
+const scraperRoute = require("./routes/scraper.routes")
 
-// basics jquery
-requset("https://github.com/AbdulrahmanIsmailMohamed", (err, response, html) => {
-    if (!err && response.statusCode == 200) {
-        const $ = cheerio.load(html);
-        const siteHeading = $(".clearfix");
+const app = express();
 
-        // console.log(siteHeading.html());
-        // console.log(siteHeading.text());
+app.use(express.urlencoded({ extended: false }))
+app.use(express.static("public"));
 
-        // const output = siteHeading.find("h1").html();
-        // const output = siteHeading.find("a").html();
-        // const output = siteHeading.find("h1").text();
-        // console.log(output);
+app.use("/", scraperRoute)
 
-        // Query on popular repositry
-        $("ol").each((i, el) => {
-            const item = $(el).text();
-            const link = $(el).attr("href");
-            console.log(item);
-        });
-    }
-})
+const port = 3000 || process.env.PORT;
+app.listen(port, () => console.log(`The Server Running In Port ${port}`));
